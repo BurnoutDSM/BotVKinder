@@ -85,7 +85,7 @@ def drop_people(user_id):
 
 def drop_seen_people(user_id):
     with conn.cursor() as cursor:
-        cursor.execute(f'DROP TABLE IF EXISTS seen_people{user_id} CASCADE')
+        cursor.execute(f'DROP TABLE IF EXISTS seen_people{user_id} CASCADE;')
         print('Таблица seen_people удалена')
 
 

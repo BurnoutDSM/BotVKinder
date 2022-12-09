@@ -75,7 +75,7 @@ def select(user_id, offset):
 def drop_table_users():
     with conn.cursor() as cursor:
         cursor.execute('DROP TABLE IF EXISTS users CASCADE;')
-
+        print('Таблица users удалена')
 
 def drop_people(user_id):
     with conn.cursor() as cursor:

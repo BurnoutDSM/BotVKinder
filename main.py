@@ -249,9 +249,9 @@ class BotVK:
 
     def unseen_people(self, user_id, offset):
         self.send_photo_1(user_id, offset)
-        time.sleep(0.4)
+        time.sleep(0.5)
         self.send_photo_2(user_id, offset)
-        time.sleep(0.4)
+        time.sleep(0.5)
         self.send_photo_3(user_id, offset)
         self.send_msg(user_id, self.person_info(user_id, offset))
         insert_seen_people(user_id, self.person_id(user_id, offset))

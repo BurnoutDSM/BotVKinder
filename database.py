@@ -1,5 +1,5 @@
 import psycopg2
-from config import *
+from myconfig import *
 
 conn = psycopg2.connect(
     host=host,
@@ -19,6 +19,11 @@ def create_table_users():
         print('Таблица users создана')
 
 
+def insert_users(user_id):
+    with conn.cursor() as cursor:
+        cursor.execute(f"INSERT INTO users (user_id) VALUES ('{user_id}');")
+
+
 def create_table_people(user_id):
     with conn.cursor() as cursor:
         cursor.execute(f'CREATE TABLE IF NOT EXISTS people{user_id}('
@@ -30,25 +35,20 @@ def create_table_people(user_id):
     print('Таблица people создана')
 
 
-def create_table_seen_people(user_id):
-    with conn.cursor() as cursor:
-        cursor.execute(f'CREATE TABLE IF NOT EXISTS seen_people{user_id} ('
-                       'id serial,'
-                       'vk_id varchar(20) PRIMARY KEY);')
-    print('Таблица seen_people создана')
-
-
-def insert_user(user_id):
-    with conn.cursor() as cursor:
-        cursor.execute(f"INSERT INTO users (user_id) VALUES ('{user_id}');")
-
-
 def insert_people(user_id, f_name, l_name, vk_id, vk_link):
     first_name = f_name.replace("'", "")
     last_name = l_name.replace("'", "")
     with conn.cursor() as cursor:
         cursor.execute(f"INSERT INTO people{user_id} (f_name, l_name, vk_id, vk_link) "
                        f"VALUES ('{first_name}', '{last_name}', '{vk_id}', '{vk_link}');")
+
+
+def create_table_seen_people(user_id):
+    with conn.cursor() as cursor:
+        cursor.execute(f'CREATE TABLE IF NOT EXISTS seen_people{user_id} ('
+                       'id serial,'
+                       'vk_id varchar(20) PRIMARY KEY);')
+    print('Таблица seen_people создана')
 
 
 def insert_seen_people(user_id, vk_id):
@@ -77,6 +77,7 @@ def drop_table_users():
         cursor.execute('DROP TABLE IF EXISTS users CASCADE;')
         print('Таблица users удалена')
 
+
 def drop_people(user_id):
     with conn.cursor() as cursor:
         cursor.execute(f'DROP TABLE IF EXISTS people{user_id} CASCADE;')
@@ -94,3 +95,5 @@ def create_db(user_id):
     drop_seen_people(user_id)
     create_table_people(user_id)
     create_table_seen_people(user_id)
+
+

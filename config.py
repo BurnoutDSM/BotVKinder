@@ -1,12 +1,10 @@
 user_token = ''
 comm_token = ''
 
-
 host = '127.0.0.1'
 user = 'postgres'
 password = 'your_password'
 db_name = 'your_database'
-
 
 offset = 0
 

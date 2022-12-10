@@ -45,7 +45,6 @@ for event in bot.longpoll.listen():
             elif msg == 'еще' or msg == 'ещё':
                 try:
                     for i in range(0, 1000):
-                        # offset += 1
                         bot.unseen_people(user_id, offset)
                         break
                 except TypeError:

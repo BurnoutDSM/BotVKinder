@@ -16,8 +16,8 @@ for event in bot.longpoll.listen():
         for i in tuple_users:
             list_users.append(i[0])
         if user_id not in list_users:
-            insert_users(user_id)  # Table with all users
             create_db(user_id)  # Tables for a single user
+            insert_users(user_id)  # Table with all users
             if msg == 'начать поиск':
                 bot.send_msg(user_id, f'Привет, {bot.find_name(user_id)}')
                 bot.find_people(user_id)

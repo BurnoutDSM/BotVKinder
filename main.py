@@ -210,10 +210,6 @@ class BotVK:
                                        f'попробуй еще раз и/или обратись к администратору')
         except Exception:
             return ''
-        # except Exception:
-        #     self.send_msg(user_id, 'Ошибка получения фото')
-        #     print('Ошибка получения id фото')
-        #     return ''
 
     def send_photo_1(self, user_id, offset):
         photo = self.extract_id_photo(self.person_id(user_id, offset))

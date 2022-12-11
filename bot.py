@@ -41,9 +41,7 @@ for event in bot.longpoll.listen():
 
             elif msg == 'еще' or msg == 'ещё':
                 try:
-                    for i in range(0, 1000):
-                        bot.unseen_people(user_id)
-                        break
+                    bot.unseen_people(user_id)
                 except TypeError:
                     bot.send_msg(event.user_id, 'Нет анкет, попробуй "Начать поиск" или "Обнулить"')
 

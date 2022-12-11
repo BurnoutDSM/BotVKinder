@@ -1,4 +1,4 @@
-from config import user_token, comm_token, offset
+from config import user_token, comm_token
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 from random import randrange

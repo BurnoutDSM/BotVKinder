@@ -45,7 +45,7 @@ for event in bot.longpoll.listen():
                         bot.unseen_people(user_id)
                         break
                 except TypeError:
-                    bot.send_msg(event.user_id, 'Что-то пошло не так, попробуй "Начать поиск".')
+                    bot.send_msg(event.user_id, 'Нет анкет, попробуй "Начать поиск" или "Обнулить"')
 
             elif msg == 'обнулить':
                 delete_from_seen_people(user_id)

@@ -96,25 +96,29 @@ class BotVK:
                                    f'попробу еще раз и/или обратись к администратору')
             print(response.status_code)
 
+
     def find_city(self, user_id):
         url = 'https://api.vk.com/method/users.get'
         params = {'user_ids': user_id, 'fields': 'city'}
         response = requests.get(url, params={**self.params, **params})
         user_data = response.json()
-        if 'response' in user_data:
-            if 'city' in user_data['response'][0]:
-                return user_data['response'][0]['city']['title']
+        try:
+            if 'response' in user_data:
+                if 'city' in user_data['response'][0]:
+                    return user_data['response'][0]['city']['title']
+                else:
+                    self.send_msg(user_id, 'Введи город (полное название) проживания для поиска ')
+                    for event in self.longpoll.listen():
+                        if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                            msg = str(event.text)
+                            return msg
             else:
-                self.send_msg(user_id, 'Введи город (полное название) проживания для поиска ')
-                for event in self.longpoll.listen():
-                    if event == VkEventType.MESSAGE_NEW and event.to_me:
-                        msg = event.text
-                        return msg
-        else:
-            self.send_msg(user_id, f'{response.status_code} - '
-                                   f'Не понимаю город, '
-                                   f'попробуй еще раз и/или обратись к администратору')
-            print(response.status_code)
+                self.send_msg(user_id, f'{response.status_code} - '
+                                       f'Не понимаю город, '
+                                       f'попробуй еще раз и/или обратись к администратору')
+                print(response.status_code)
+        except Exception:
+            self.send_msg(user_id, 'er')
 
     def find_relation(self, user_id):
         url = 'https://api.vk.com/method/users.get'
@@ -211,64 +215,64 @@ class BotVK:
         except Exception:
             return ''
 
-    def send_photo_1(self, user_id, offset):
-        photo = self.extract_id_photo(self.person_id(user_id, offset))
+    def send_photo_1(self, user_id):
+        photo = self.extract_id_photo(self.person_id(user_id))
         try:
             if len(photo) > 0:
                 self.vk.method('messages.send', {'user_id': user_id, 'message': 'Лучшее фото', 'access_token': user_token,
-                                                 'attachment': f'photo{self.person_id(user_id, offset)}_{photo[0]}',
+                                                 'attachment': f'photo{self.person_id(user_id)}_{photo[0]}',
                                                  'random_id': 0})
             else:
                 self.send_msg(user_id, 'Нет фото')
         except TypeError:
             self.send_msg(user_id, 'Ошибка получения фото')
 
-    def send_photo_2(self, user_id, offset):
-        photo = self.extract_id_photo(self.person_id(user_id, offset))
+    def send_photo_2(self, user_id):
+        photo = self.extract_id_photo(self.person_id(user_id))
         try:
             if len(photo) > 1:
                 self.vk.method('messages.send', {'user_id': user_id, 'message': '2-е фото', 'access_token': user_token,
-                                                 'attachment': f'photo{self.person_id(user_id, offset)}_{photo[1]}',
+                                                 'attachment': f'photo{self.person_id(user_id)}_{photo[1]}',
                                                  'random_id': 0})
             else:
                 self.send_msg(user_id, 'Нет фото')
         except TypeError:
             self.send_msg(user_id, 'Ошибка получения фото')
 
-    def send_photo_3(self, user_id, offset):
-        photo = self.extract_id_photo(self.person_id(user_id, offset))
+    def send_photo_3(self, user_id):
+        photo = self.extract_id_photo(self.person_id(user_id))
         try:
             if len(photo) > 2:
                 self.vk.method('messages.send', {'user_id': user_id, 'message': '3-e фото', 'access_token': user_token,
-                                                 'attachment': f'photo{self.person_id(user_id, offset)}_{photo[2]}',
+                                                 'attachment': f'photo{self.person_id(user_id)}_{photo[2]}',
                                                  'random_id': 0})
             else:
                 self.send_msg(user_id, 'Нет фото')
         except TypeError:
             self.send_msg(user_id, 'Ошибка получения фото')
 
-    def unseen_people(self, user_id, offset):
-        self.send_photo_1(user_id, offset)
-        time.sleep(0.5)
-        self.send_photo_2(user_id, offset)
-        time.sleep(0.5)
-        self.send_photo_3(user_id, offset)
-        self.send_msg(user_id, self.person_info(user_id, offset))
-        insert_seen_people(user_id, self.person_id(user_id, offset))
+    def unseen_people(self, user_id):
+        self.send_photo_1(user_id)
+        time.sleep(0.4)
+        self.send_photo_2(user_id)
+        time.sleep(0.4)
+        self.send_photo_3(user_id)
+        self.send_msg(user_id, self.person_info(user_id))
+        insert_seen_people(user_id, self.person_id(user_id))
 
-    def person_info(self, user_id, offset):
-        tuple_persons = select(user_id, offset)
+    def person_info(self, user_id):
+        tuple_persons = select(user_id)
         list_persons = []
         for person in tuple_persons:
             list_persons.append(person)
-        return f'{list_persons[0]} {list_persons[1]}, страница - {list_persons[3]}'
+        return f'{list_persons[1]} {list_persons[2]}, страница - {list_persons[4]}'
 
-    def person_id(self, user_id, offset):
-        tuple_persons = select(user_id, offset)
+    def person_id(self, user_id):
+        tuple_persons = select(user_id)
         list_persons = []
         for person in tuple_persons:
             list_persons.append(person)
-        return str(list_persons[2])
+        return str(list_persons[3])
 
 
 bot = BotVK(user_token)

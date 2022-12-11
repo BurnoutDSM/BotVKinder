@@ -2,8 +2,7 @@ from main import *
 from keyboard import send_buttons
 
         # Used at the first launch
-# drop_table_users()          # ATTENTION This function will delete all registered users
-# create_table_users()
+create_db()  # ATTENTION this method will delete all registered users if there are any
 
 
 for event in bot.longpoll.listen():
@@ -16,13 +15,12 @@ for event in bot.longpoll.listen():
         for i in tuple_users:
             list_users.append(i[0])
         if user_id not in list_users:
-            create_db(user_id)  # Tables for a single user
-            insert_users(user_id)  # Table with all users
+            insert_users(user_id)
             if msg == 'начать поиск':
                 bot.send_msg(user_id, f'Привет, {bot.find_name(user_id)}')
                 bot.find_people(user_id)
                 bot.send_msg(event.user_id, 'Вот что я нашел, если не подходит жми "Еще".')
-                bot.unseen_people(user_id, offset)
+                bot.unseen_people(user_id)
 
             elif msg == 'еще' or msg == 'ещё':
                 bot.send_msg(event.user_id, 'Я еще никого не искал. Жми "Начать поиск".')
@@ -36,23 +34,21 @@ for event in bot.longpoll.listen():
         else:
             if msg == 'начать поиск':
                 bot.send_msg(user_id, f'Привет, {bot.find_name(user_id)}')
-                drop_people(user_id)
-                create_table_people(user_id)
+                delete_from_people(user_id)
                 bot.find_people(user_id)  # contains the function insert_people()
                 bot.send_msg(event.user_id, 'Вот что я нашел, если не подходит жми "Еще".')
-                bot.unseen_people(user_id, offset)
+                bot.unseen_people(user_id)
 
             elif msg == 'еще' or msg == 'ещё':
                 try:
                     for i in range(0, 1000):
-                        bot.unseen_people(user_id, offset)
+                        bot.unseen_people(user_id)
                         break
                 except TypeError:
                     bot.send_msg(event.user_id, 'Что-то пошло не так, попробуй "Начать поиск".')
 
             elif msg == 'обнулить':
-                drop_seen_people(user_id)
-                create_table_seen_people(user_id)
+                delete_from_seen_people(user_id)
                 bot.send_msg(event.user_id, 'Иноформация о просмотренных людях удалена.')
 
             else:

@@ -102,23 +102,22 @@ class BotVK:
         params = {'user_ids': user_id, 'fields': 'city'}
         response = requests.get(url, params={**self.params, **params})
         user_data = response.json()
-        try:
-            if 'response' in user_data:
-                if 'city' in user_data['response'][0]:
-                    return user_data['response'][0]['city']['title']
-                else:
-                    self.send_msg(user_id, 'Введи город (полное название) проживания для поиска ')
-                    for event in self.longpoll.listen():
-                        if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                            msg = str(event.text)
-                            return msg
+        if 'response' in user_data:
+            if 'city' in user_data['response'][0]:
+                return user_data['response'][0]['city']['title']
             else:
-                self.send_msg(user_id, f'{response.status_code} - '
-                                       f'Не понимаю город, '
-                                       f'попробуй еще раз и/или обратись к администратору')
-                print(response.status_code)
-        except Exception:
-            self.send_msg(user_id, 'er')
+                self.send_msg(user_id, 'Введи город (полное название) проживания для поиска ')
+                for event in self.longpoll.listen():
+                    if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                        msg = str(event.text)
+                        return msg
+        else:
+            self.send_msg(user_id, f'{response.status_code} - '
+                                   f'Не понимаю город, '
+                                   f'попробуй еще раз и/или обратись к администратору.'
+                                   f'А пока что я ищу в СПБ')
+            print(response.status_code)
+            return 'Санкт-Петербург'
 
     def find_relation(self, user_id):
         url = 'https://api.vk.com/method/users.get'
@@ -131,10 +130,8 @@ class BotVK:
             else:
                 return user_data['response'][0]['relation']
         else:
-            self.send_msg(user_id, f'{response.status_code} - '
-                                   f'Не понимаю семейное положение, '
-                                   f'попробуй еще раз и/или обратись к администратору')
-            print(response.status_code)
+            print(f'{response.status_code} Проблемы с семейным положением')
+            return 6
 
     def find_name(self, user_id):
         url = 'https://api.vk.com/method/users.get'
@@ -145,8 +142,7 @@ class BotVK:
             return user_data['response'][0]['first_name']
         else:
             self.send_msg(user_id, f'{response.status_code} - '
-                                   f'Не могу узнать имя, '
-                                   f'попробуй еще раз и/или обратись к администратору')
+                                   f'Не могу узнать имя)')
             print(response.status_code)
 
     def find_people(self, user_id):

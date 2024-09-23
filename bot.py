@@ -18,9 +18,9 @@ for event in bot.longpoll.listen():
             insert_users(user_id)
             if msg == 'начать поиск':
                 bot.send_msg(user_id, f'Привет, {bot.find_name(user_id)}')
-                bot.find_people(user_id)
+                bot.find_persons(user_id)
                 bot.send_msg(event.user_id, 'Вот что я нашел, если не подходит жми "Еще".')
-                bot.unseen_people(user_id)
+                bot.unseen_persons(user_id)
 
             elif msg == 'еще' or msg == 'ещё':
                 bot.send_msg(event.user_id, 'Я еще никого не искал. Жми "Начать поиск".')
@@ -41,7 +41,7 @@ for event in bot.longpoll.listen():
 
             elif msg == 'еще' or msg == 'ещё':
                 try:
-                    bot.unseen_people(user_id)
+                    bot.unseen_persons(user_id)
                 except TypeError:
                     bot.send_msg(event.user_id, 'Нет анкет, попробуй "Начать поиск" или "Обнулить"')
 

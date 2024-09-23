@@ -34,10 +34,10 @@ for event in bot.longpoll.listen():
         else:
             if msg == 'начать поиск':
                 bot.send_msg(user_id, f'Привет, {bot.find_name(user_id)}')
-                delete_from_people(user_id)
-                bot.find_people(user_id)  # contains the function insert_people()
+                delete_from_persons(user_id)
+                bot.find_persons(user_id)  # contains the function insert_people()
                 bot.send_msg(event.user_id, 'Вот что я нашел, если не подходит жми "Еще".')
-                bot.unseen_people(user_id)
+                bot.unseen_persons(user_id)
 
             elif msg == 'еще' or msg == 'ещё':
                 try:
@@ -46,7 +46,7 @@ for event in bot.longpoll.listen():
                     bot.send_msg(event.user_id, 'Нет анкет, попробуй "Начать поиск" или "Обнулить"')
 
             elif msg == 'обнулить':
-                delete_from_seen_people(user_id)
+                delete_from_seen_persons(user_id)
                 bot.send_msg(event.user_id, 'Иноформация о просмотренных людях удалена.')
 
             else:

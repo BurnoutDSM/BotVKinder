@@ -24,7 +24,7 @@ def insert_users(user_id):
         cursor.execute(f"INSERT INTO users (user_id) VALUES ('{user_id}');")
 
 
-def create_table_people():
+def create_table_persons():
     with conn.cursor() as cursor:
         cursor.execute(f'CREATE TABLE IF NOT EXISTS people ('
                        'id serial, '
